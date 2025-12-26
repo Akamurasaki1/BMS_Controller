@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>WS Test</title>
+  <title>WS Test Local</title>
 </head>
 <body>
   <div id="log">INIT</div>
 
   <script>
-    const PC_HOST = "192.168.1.5";   // ← Mac の IP
-    const PC_PORT = 8080;
+    const PC_HOST = "localhost";     // ★ ローカルテストなので localhost 固定
+    const PC_PORT = 8765;           // ★ server.py と同じ 8765
     const WS_URL = `ws://${PC_HOST}:${PC_PORT}`;
 
     const logEl = document.getElementById("log");
@@ -17,7 +17,10 @@
     function log(text, color = "black") {
       logEl.textContent = text;
       logEl.style.color = color;
+      console.log(text);
     }
+
+    log("CONNECTING " + WS_URL + " ...");
 
     const ws = new WebSocket(WS_URL);
 
@@ -27,7 +30,7 @@
     };
 
     ws.onmessage = (ev) => {
-      console.log("message:", ev.data);
+      log("RECV " + ev.data, "blue");
     };
 
     ws.onerror = (ev) => {
