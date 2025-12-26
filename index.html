@@ -134,7 +134,6 @@
     }
 
     .key {
-      flex:0 1 20%;
       border-radius: 4px;
       border: 2px solid var(--btn-border);
       box-shadow:
@@ -151,10 +150,17 @@
       user-select: none;
     }
     .key.W {
+      flex:0 1 20%;
       background: #c1dbde;
     }
     .key.B {
+      flex:0 1 20%;
       background: #222;
+    }
+    .key.esc {
+      width: 100px;
+      height: 100px;
+      background:linear-gradient(180deg, #c9d1d1 0, #4f5252 55%, #989e9e 100%);
     }
 
     .key-inner {
