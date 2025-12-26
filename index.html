@@ -160,7 +160,8 @@
     .key.esc {
       width: 100px;
       height: 100px;
-      background:linear-gradient(180deg, #c9d1d1 0, #4f5252 55%, #989e9e 100%);
+      background: #222;
+        
     }
 
     .key-inner {
@@ -176,6 +177,9 @@
     }
     .key-inner.W {
       background: linear-gradient(180deg, #c9d1d1 0, #4f5252 55%, #989e9e 100%);
+    }
+    .key-inner.esc {
+       background:linear-gradient(90deg, #c9d1d1 0, #4f5252 55%, #989e9e 100%);
     }
 
     .key.active {
@@ -215,8 +219,8 @@
 <body>
   <div id="status">DISCONNECTED</div>
   <div id="controller">
-      <div class="key W" data-key="8">
-        <div class="key-inner W"></div>
+      <div class="key esc" data-key="8">
+        <div class="key-inner esc"></div>
         <div class="key-label">8</div>
       </div>
     <!-- 左：スクラッチ -->
