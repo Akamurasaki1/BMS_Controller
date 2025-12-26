@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>BMS iPad Controller</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #status {
+      padding: 8px 12px;
+      font-size: 14px;
+      background: #111;
+      border-bottom: 1px solid #333;
+    }
+    #lanes {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 8px;
+      box-sizing: border-box;
+      gap: 4px;
+    }
+    .lane {
+      flex: 1;
+      border-radius: 8px;
+      background: #222;
+      border: 1px solid #444;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .lane-label {
+      position: absolute;
+      bottom: 4px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    .lane.active {
+      background: #4caf50;
+      border-color: #8bc34a;
+      box-shadow: 0 0 16px rgba(139,195,74,0.8);
+    }
+    /* 皿だけ見た目変えたい場合 */
+    .lane.scratch {
+      background: #303f9f;
+      border-color: #3f51b5;
+      border-radius: 999px;
+    }
+    .lane.scratch.active {
+      background: #ff9800;
+      border-color: #ffc107;
+      box-shadow: 0 0 16px rgba(255,193,7,0.8);
+    }
+  </style>
+</head>
+<body>
+  <div id="status">DISCONNECTED</div>
+  <div id="lanes">
+    <!-- data-key: 0〜7 -->
+    <div class="lane scratch" data-key="0"><div class="lane-label">SCR</div></div>
+    <div class="lane" data-key="1"><div class="lane-label">1</div></div>
+    <div class="lane" data-key="2"><div class="lane-label">2</div></div>
+    <div class="lane" data-key="3"><div class="lane-label">3</div></div>
+    <div class="lane" data-key="4"><div class="lane-label">4</div></div>
+    <div class="lane" data-key="5"><div class="lane-label">5</div></div>
+    <div class="lane" data-key="6"><div class="lane-label">6</div></div>
+    <div class="lane" data-key="7"><div class="lane-label">7</div></div>
+  </div>
+
+  <script>
+    // ==== 設定: PC側のアドレスをここで変更 ====
+    const PC_HOST = "192.168.0.10"; // ← PCのIPに変える
+    const PC_PORT = 8080;
+    const WS_URL = `ws://${PC_HOST}:${PC_PORT}`;
+
+    const statusEl = document.getElementById("status");
+    const lanes = Array.from(document.querySelectorAll(".lane"));
+
+    let ws = null;
+    let reconnectTimer = null;
+
+    function logStatus(text, color = "#fff") {
+      statusEl.textContent = text;
+      statusEl.style.color = color;
+    }
+
+    function connect() {
+      if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+        return;
+      }
+      logStatus(`CONNECTING ${WS_URL} ...`, "#ccc");
+      ws = new WebSocket(WS_URL);
+
+      ws.onopen = () => {
+        logStatus(`CONNECTED to ${WS_URL}`, "#4caf50");
+      };
+
+      ws.onclose = () => {
+        logStatus("DISCONNECTED (tap to retry)", "#f44336");
+      };
+
+      ws.onerror = () => {
+        logStatus("ERROR (tap to retry)", "#f44336");
+      };
+    }
+
+    // ステータスバータップで再接続
+    statusEl.addEventListener("click", () => {
+      connect();
+    });
+
+    function send(t, k) {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      // 超軽量JSON
+      ws.send(JSON.stringify({ t, k }));
+    }
+
+    function bindLane(el) {
+      const key = Number(el.dataset.key);
+
+      const onDown = (e) => {
+        e.preventDefault();
+        el.classList.add("active");
+        send(1, key); // keydown
+      };
+
+      const onUp = (e) => {
+        e.preventDefault();
+        el.classList.remove("active");
+        send(0, key); // keyup
+      };
+
+      // タッチ
+      el.addEventListener("touchstart", onDown, { passive: false });
+      el.addEventListener("touchend", onUp, { passive: false });
+      el.addEventListener("touchcancel", onUp, { passive: false });
+
+      // PCでデバッグ用: マウスでも反応
+      el.addEventListener("mousedown", onDown);
+      window.addEventListener("mouseup", onUp);
+    }
+
+    lanes.forEach(bindLane);
+
+    // 起動時に接続
+    connect();
+  </script>
+</body>
+</html>
