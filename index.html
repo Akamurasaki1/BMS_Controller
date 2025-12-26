@@ -267,9 +267,9 @@
     </div>
   </div>
 
-  <script>
+    <script>
     // ====== PC側の接続先設定 ======
-    const PC_HOST = "192.168.1.5";  // ★PCのIPアドレスに変更
+    const PC_HOST = "192.168.1.5"; // ★MacのIPに固定
     const PC_PORT = 8080;
     const WS_URL = `ws://${PC_HOST}:${PC_PORT}`;
 
@@ -282,6 +282,7 @@
     function setStatus(text, color = "#fff") {
       statusEl.textContent = text;
       statusEl.style.color = color;
+      console.log("[STATUS]", text);
     }
 
     function connect() {
@@ -289,18 +290,33 @@
         return;
       }
       setStatus(`CONNECTING ${WS_URL} ...`, "#ddd");
+      console.log("[WS] new WebSocket:", WS_URL);
       ws = new WebSocket(WS_URL);
 
-      ws.onopen = () => setStatus(`CONNECTED to ${WS_URL}`, "#4caf50");
-      ws.onclose = () => setStatus("DISCONNECTED (tap here to reconnect)", "#ff5252");
-      ws.onerror = () => setStatus("ERROR (tap here to reconnect)", "#ff5252");
+      ws.onopen = () => {
+        setStatus(`CONNECTED to ${WS_URL}`, "#4caf50");
+        console.log("[WS] open");
+      };
+      ws.onclose = (ev) => {
+        console.log("[WS] close", ev);
+        setStatus("DISCONNECTED (tap here to reconnect)", "#ff5252");
+      };
+      ws.onerror = (ev) => {
+        console.log("[WS] error", ev);
+        setStatus("ERROR (tap here to reconnect)", "#ff5252");
+      };
+      ws.onmessage = (ev) => {
+        console.log("[WS] message", ev.data);
+      };
     }
 
     statusEl.addEventListener("click", connect);
 
     function send(t, k) {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      ws.send(JSON.stringify({ t, k }));
+      const payload = JSON.stringify({ t, k });
+      console.log("[SEND]", payload);
+      ws.send(payload);
     }
 
     function bindPadElement(el) {
@@ -328,11 +344,8 @@
       window.addEventListener("mouseup", up);
     }
 
-    // 7キー + スクラッチをバインド
     keys.forEach(bindPadElement);
-    if (turntable) {
-      bindPadElement(turntable);
-    }
+    if (turntable) bindPadElement(turntable);
 
     // 起動時に即接続
     connect();
