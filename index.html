@@ -30,7 +30,21 @@
       box-sizing: border-box;
       gap: 4px;
     }
-    .lane {
+    .laneW {
+      flex: 1;
+      border-radius: 8px;
+      background: #222;
+      border: 1px solid #444;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .laneB {
       flex: 1;
       border-radius: 8px;
       background: #222;
@@ -50,8 +64,13 @@
       font-size: 14px;
       opacity: 0.8;
     }
-    .lane.active {
+    .laneW.active {
       background: #4caf50;
+      border-color: #8bc34a;
+      box-shadow: 0 0 16px rgba(139,195,74,0.8);
+    }
+    .laneB.active {
+      background: blue;
       border-color: #8bc34a;
       box-shadow: 0 0 16px rgba(139,195,74,0.8);
     }
@@ -73,13 +92,13 @@
   <div id="lanes">
     <!-- data-key: 0〜7 -->
     <div class="lane scratch" data-key="0"><div class="lane-label">SCR</div></div>
-    <div class="lane" data-key="1"><div class="lane-label">1</div></div>
-    <div class="lane" data-key="2"><div class="lane-label">2</div></div>
-    <div class="lane" data-key="3"><div class="lane-label">3</div></div>
-    <div class="lane" data-key="4"><div class="lane-label">4</div></div>
-    <div class="lane" data-key="5"><div class="lane-label">5</div></div>
-    <div class="lane" data-key="6"><div class="lane-label">6</div></div>
-    <div class="lane" data-key="7"><div class="lane-label">7</div></div>
+    <div class="laneW" data-key="1"><div class="lane-label">1</div></div>
+    <div class="laneB" data-key="2"><div class="lane-label">2</div></div>
+    <div class="laneW" data-key="3"><div class="lane-label">3</div></div>
+    <div class="laneB" data-key="4"><div class="lane-label">4</div></div>
+    <div class="laneW" data-key="5"><div class="lane-label">5</div></div>
+    <div class="laneB" data-key="6"><div class="lane-label">6</div></div>
+    <div class="laneW" data-key="7"><div class="lane-label">7</div></div>
   </div>
 
   <script>
