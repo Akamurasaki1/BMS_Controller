@@ -1,3 +1,4 @@
+<!-- test.html （ダブルクリックして開く用） -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,42 +6,43 @@
   <title>WS Test Local</title>
 </head>
 <body>
-  <div id="log">INIT</div>
+  <pre id="log">INIT</pre>
 
   <script>
-    const PC_HOST = "localhost";     // ★ ローカルテストなので localhost 固定
-    const PC_PORT = 8765;           // ★ server.py と同じ 8765
-    const WS_URL = `ws://${PC_HOST}:${PC_PORT}`;
+    const HOST = "localhost";   // ローカルのみ
+    const PORT = 8765;
+    const URL  = `ws://${HOST}:${PORT}`;
 
     const logEl = document.getElementById("log");
-
-    function log(text, color = "black") {
-      logEl.textContent = text;
-      logEl.style.color = color;
-      console.log(text);
+    function log(msg) {
+      console.log(msg);
+      logEl.textContent += "\n" + msg;
     }
 
-    log("CONNECTING " + WS_URL + " ...");
+    log("CONNECTING " + URL + " ...");
 
-    const ws = new WebSocket(WS_URL);
+    let ws;
+    try {
+      ws = new WebSocket(URL);
+    } catch (e) {
+      log("NEW WEBSOCKET ERROR: " + e);
+    }
 
-    ws.onopen = () => {
-      log("CONNECTED " + WS_URL, "green");
-      ws.send(JSON.stringify({ hello: "world" }));
-    };
-
-    ws.onmessage = (ev) => {
-      log("RECV " + ev.data, "blue");
-    };
-
-    ws.onerror = (ev) => {
-      log("ERROR", "red");
-      console.log("ws error", ev);
-    };
-
-    ws.onclose = () => {
-      log("CLOSED", "orange");
-    };
+    if (ws) {
+      ws.onopen = () => {
+        log("OPEN");
+        ws.send("hello from browser");
+      };
+      ws.onmessage = (ev) => {
+        log("MESSAGE: " + ev.data);
+      };
+      ws.onerror = (ev) => {
+        log("ERROR: " + JSON.stringify(ev));
+      };
+      ws.onclose = () => {
+        log("CLOSE");
+      };
+    }
   </script>
 </body>
 </html>
