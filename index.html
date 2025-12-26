@@ -137,7 +137,6 @@
       flex: 0 1 18%;
       max-width: 70px;
       border-radius: 4px;
-      background: #43454d;
       border: 2px solid var(--btn-border);
       box-shadow:
         0 3px 0 rgba(160, 160, 160, 1),
@@ -153,7 +152,7 @@
       user-select: none;
     }
     .key.W {
-      background: 
+      background: #43454d;
     }
     .key.B {
       background: #222;
@@ -224,7 +223,25 @@
     <!-- 右：7ボタン（上4 / 下3） -->
     <div id="keyboard-area">
       <div class="panel">
-        <!-- 上段 4ボタン: K1-4 -->
+        <!-- 上段 3ボタン: K5-7（中央寄せ） -->
+        <div class="panel-row" style="justify-content:center;">
+          <div style="flex:0 1 9%;"></div>
+          <div class="key" data-key="5">
+            <div class="key-inner"></div>
+            <div class="key-label">5</div>
+          </div>
+          <div class="key" data-key="6">
+            <div class="key-inner"></div>
+            <div class="key-label">6</div>
+          </div>
+          <div class="key" data-key="7">
+            <div class="key-inner"></div>
+            <div class="key-label">7</div>
+          </div>
+          <div style="flex:0 1 9%;"></div>
+        </div>
+      </div>
+      <!-- 下段 4ボタン: K1-4 -->
         <div class="panel-row">
           <div class="key" data-key="1">
             <div class="key-inner"></div>
@@ -243,24 +260,6 @@
             <div class="key-label">4</div>
           </div>
         </div>
-        <!-- 下段 3ボタン: K5-7（中央寄せ） -->
-        <div class="panel-row" style="justify-content:center;">
-          <div style="flex:0 1 9%;"></div>
-          <div class="key" data-key="5">
-            <div class="key-inner"></div>
-            <div class="key-label">5</div>
-          </div>
-          <div class="key" data-key="6">
-            <div class="key-inner"></div>
-            <div class="key-label">6</div>
-          </div>
-          <div class="key" data-key="7">
-            <div class="key-inner"></div>
-            <div class="key-label">7</div>
-          </div>
-          <div style="flex:0 1 9%;"></div>
-        </div>
-      </div>
     </div>
   </div>
 
