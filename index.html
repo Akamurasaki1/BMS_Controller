@@ -285,7 +285,19 @@
 
     <script>
     // ====== PC側の接続先設定 ======
-    const PC_HOST = "192.169.0.242"; // "192.168.1.5"; // ★MacのIPに固定
+   // const PC_HOST = "192.168.1.5"; // ★MacのIPに固定
+   // const PC_PORT = 8080;
+   // const WS_URL = `ws://${PC_HOST}:${PC_PORT}`;
+      
+    // ====== PC側の接続先設定（URLクエリから取得） ======
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    // URL の ?host=xxx から PC_HOST を決める。なければデフォルト値。
+    const hostFromQuery = getQueryParam("host");
+    const PC_HOST = hostFromQuery || "192.168.1.5";  // ← 自宅用のデフォルトにしてOK
     const PC_PORT = 8080;
     const WS_URL = `ws://${PC_HOST}:${PC_PORT}`;
 
